@@ -17,6 +17,9 @@ defmodule EVESwaggerInterface.Mixfile do
 
   defp deps do
     [
+      {:tesla, "~> 0.9"},
+      {:poison, "~> 3.1"},
+      {:hackney, "~> 1.9"},
     ]
   end
 end

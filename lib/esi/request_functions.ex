@@ -18,17 +18,17 @@ defmodule ESI.RequestFunctions do
         |> remove_version(version_in_path)
         |> generate_function_name(method)
 
-        IO.puts "#{method}, #{path} => #{ESI.RequestFunctions.generate_function_name(url_parts, method)}"
+        IO.puts "#{method}, #{path} => #{ESI.RequestFunctions.generate_function_name(method, url_parts)}"
       end)
     end)
   end
 
-  def generate_function_name(url_parts, http_method) do
+  def generate_function_name(http_method, url_parts) do
     url_parts
     |> Enum.reduce(
       [""], # start with "", so we don't have to handle special case for first part
     fn (part, [last_part | rest] = name_parts) ->
-      cleaned_part = clean_part(part) # remove {} and _id from parameter part
+      cleaned_part = clean_argument_part(part) # remove {} and _id from parameter part
       if String.starts_with?(last_part, cleaned_part) do # e.g. /killmails/{killmail_id} -> /killmail
         [cleaned_part | rest]
       else
@@ -44,7 +44,7 @@ defmodule ESI.RequestFunctions do
   defp remove_version(path, true), do: path |> Enum.drop(1)
   defp remove_version(path, false), do: path
 
-  defp clean_part(part) do
+  defp clean_argument_part(part) do
     if String.starts_with?(part, "{") do
       part
       |> String.trim_leading("{")

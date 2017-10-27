@@ -4,10 +4,34 @@ defmodule ESI.RequestFunctionsTest do
   import ESI.RequestFunctions
 
   test "function name resources list" do
-    assert "get_killmails" == generate_function_name(["killmails"], "get")
+    func_name = generate_function_name(
+      "get",
+      ["killmails"]
+    )
+    assert "get_killmails" == func_name
   end
 
   test "function name resource singleton" do
-    assert "get_killmail" == generate_function_name(["killmails", "{killmail_id}"], "get")
+    func_name = generate_function_name(
+      "get",
+      ["killmails", "{killmail_id}"]
+    )
+    assert "get_killmail" == func_name
+  end
+
+  test "function name should only condense arguments" do
+    func_name = generate_function_name(
+      "get",
+      ["killmails", "killmail_id"]
+    )
+    assert "get_killmails_killmail_id" == func_name
+  end
+
+  test "function name should only condense _id arguments" do
+    func_name = generate_function_name(
+      "get",
+      ["killmails", "{killmail_id}", "{killmail_hash}"]
+    )
+    assert "get_killmail_killmail_hash" == func_name
   end
 end

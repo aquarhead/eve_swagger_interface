@@ -20,6 +20,7 @@ defmodule EVESwaggerInterface.Mixfile do
       {:tesla, "~> 0.9"},
       {:poison, "~> 3.1"},
       {:hackney, "~> 1.10"},
+      {:credo, "~> 0.8", runtime: false}
     ]
   end
 end

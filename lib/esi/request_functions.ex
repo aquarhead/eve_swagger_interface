@@ -18,7 +18,7 @@ defmodule ESI.RequestFunctions do
         |> remove_version(version_in_path)
         |> generate_function_name(method)
 
-        IO.puts "#{method}, #{path} => #{ESI.RequestFunctions.generate_function_name(method, url_parts)}"
+        IO.puts "#{method}, #{path} => #{generate_function_name(method, url_parts)}"
       end)
     end)
   end
@@ -26,19 +26,19 @@ defmodule ESI.RequestFunctions do
   def generate_function_name(http_method, url_parts) do
     url_parts
     |> Enum.reduce(
-      [""], # start with "", so we don't have to handle special case for first part
+      [""],
     fn (part, [last_part | rest] = name_parts) ->
-      cleaned_part = clean_argument_part(part) # remove {} and _id from parameter part
-      if String.starts_with?(last_part, cleaned_part) do # e.g. /killmails/{killmail_id} -> /killmail
+      cleaned_part = clean_argument_part(part)
+      if String.starts_with?(last_part, cleaned_part) do
         [cleaned_part | rest]
       else
         [cleaned_part | name_parts]
       end
     end)
-    |> Enum.reverse # reverse because we're adding everything to head
-    |> Enum.drop(1) # remove the initial ""
-    |> List.insert_at(0, http_method) # add http method in the front
-    |> Enum.join("_") # join and hooray!
+    |> Enum.reverse
+    |> Enum.drop(1)
+    |> List.insert_at(0, http_method)
+    |> Enum.join("_")
   end
 
   defp remove_version(path, true), do: path |> Enum.drop(1)

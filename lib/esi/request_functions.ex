@@ -24,16 +24,15 @@ defmodule ESI.RequestFunctions do
     |> String.trim("/")
     |> String.split("/")
     |> remove_version(versioned_path?)
-    |> Enum.reduce([], &merge_name_parts/2)
+    |> Enum.reduce([method], &merge_name_parts/2)
     |> Enum.reverse
-    |> List.insert_at(0, method)
     |> Enum.join("_")
   end
 
   defp remove_version(path, true), do: path |> Enum.drop(1)
   defp remove_version(path, false), do: path
 
-  defp merge_name_parts(part, []), do: [part]
+  defp merge_name_parts(part, [method]), do: [part, method]
   defp merge_name_parts(part, [last_part | rest] = name_parts) do
     cleaned_part = clean_argument_part(part)
     if String.starts_with?(last_part, cleaned_part) and last_part != cleaned_part do

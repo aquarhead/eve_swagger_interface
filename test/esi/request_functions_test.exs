@@ -18,13 +18,18 @@ defmodule ESI.RequestFunctionsTest do
     assert generate_function_name("get", path, false) == "get_killmail"
   end
 
-  test "function name should only condense arguments" do
+  test "function name should only merge arguments" do
     path = "/killmails/killmail_id/"
     assert generate_function_name("get", path, false) == "get_killmails_killmail_id"
   end
 
-  test "function name should only condense _id arguments" do
+  test "function name should only merge _id arguments" do
     path = "/killmails/{killmail_id}/{killmail_hash}/"
     assert generate_function_name("get", path, false) == "get_killmail_killmail_hash"
+  end
+
+  test "function name should not merge exact same name parts" do
+    path = "/killmail/{killmail_id}/"
+    assert generate_function_name("get", path, false) == "get_killmail_killmail"
   end
 end

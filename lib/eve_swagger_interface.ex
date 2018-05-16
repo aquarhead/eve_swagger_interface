@@ -4,13 +4,15 @@ defmodule EVESwaggerInterface do
   """
 
   defmacro __using__(opts) do
-    resp = Tesla.get("https://esi.tech.ccp.is/_latest/swagger.json?datasource=tranquility")
+    {:ok, resp} = Tesla.get("https://esi.evetech.net/_latest/swagger.json?datasource=tranquility")
     spec = Poison.decode!(resp.body)
 
     quote do
       use Tesla
+      adapter Tesla.Adapter.Hackney
 
-      def client(token) do
+      def build_client(opts) do
+
         Tesla.build_client([
           {Tesla.Middleware.Headers, %{"Authorization" => "Bearer " <> token}},
           # language
